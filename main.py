@@ -11,6 +11,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.image import Image
 from kivy.core.audio import SoundLoader
 from kivy.utils import get_color_from_hex,hex_colormap
+from functools import partial
 import json
 import random
 
@@ -22,7 +23,7 @@ purple = [1,0,1,1]
 white = [1,1,1,1]
 amarelo = [1,1,0,1]
 colors=[red,green,blue,purple,amarelo,white]
-
+global bttn
 colorDict={'red': [1,0,0,1],
         'green':[0,1,0,1],
         'blue':[0,0,1,1],
@@ -102,6 +103,7 @@ class Tarefas(Screen):
     path=''
     popSound=None
     popapSound=None
+    
     def on_pre_enter(self):
         if self.popSound == None:
             self.popSound=SoundLoader.load('pop.mp3')
@@ -130,6 +132,13 @@ class Tarefas(Screen):
             App.get_running_app().root.current='menu'
             #print(key)
             return True
+    def btncolor(self,index,other):
+        bttn=index
+        print(self)
+        print(index)
+        print(other)
+        print("==============")
+        return index
 
     def upScore(self,*args):
         # score=self.ids.score.text
@@ -147,21 +156,26 @@ class Tarefas(Screen):
         usedColor=[]
         for i in range(7):
             color=random.choice(colors)
-            print(str(Color(tuple(color))))            
+            #print(str(Color(tuple(color))))            
             if color not in usedColor :
-                btn=Button(text="Button #%s" % (i+1),background_color=color,on_release=self.upScore)
+                k=k+1
+                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.btncolor(color, *args)) #Button(on_press=partial(self.my_function, 'btn1'))
+                #print('btn'+str(btn)) #btn<kivy.uix.button.Button object at 
                 usedColor.append(color)
                 self.ids.btnBox.add_widget(btn)
+                a=btn.background_color
             
         #self.ids.btnA.my_color = (1, 0, 0,1)
         #self.ids.btnA.canvas.ask_update()
         if (get_color_from_hex(hex_colormap['red'])in usedColor):
             print("ok")
         else:
-            print(hex_colormap['red'])
-            print(get_color_from_hex(hex_colormap['red']))
+            #print(hex_colormap['red']) #saida ff0000
+            #print(get_color_from_hex(hex_colormap['red'])) #saida [1.0, 0.0, 0.0, 1]
             mycor=random.choice(list(colorDict.values()))
             print(mycor )
+            print('mybn'+str(a))
+            print(' '.join(str(usedColor)))   
         return Tarefas()
     #   self.popapSound.play() #erro
     #   self.ids.boxScore.Label.text= str(int(self.ids.boxScore.Label.text)+1)
@@ -171,19 +185,19 @@ class Tarefas(Screen):
     #   # self.saveData()  
 
 
-    def btns(self):
-        layout=BoxLayout(padding=10)        
-        red = [1,0,0,1]
-        green = [0,1,0,1]
-        blue =  [0,0,1,1]
-        purple = [1,0,1,1]
-        colors={red,green,blue,purple}
-        for i in range(5):
-            btn=Button(text="Button #%s" % (i+1),
-                        background_color=random.choice(colors)
-                        )
-            layout.add_widget(btn)
-        return layout
+    # def btns(self):
+    #     layout=BoxLayout(padding=10)        
+    #     red = [1,0,0,1]
+    #     green = [0,1,0,1]
+    #     blue =  [0,0,1,1]
+    #     purple = [1,0,1,1]
+    #     colors={red,green,blue,purple}
+    #     for i in range(5):
+    #         btn=Button(text="Button #%s" % (i+1),
+    #                     background_color=random.choice(colors)
+    #                     )
+    #         layout.add_widget(btn)
+    #     return layout
 
     def saveData(self,*args):
         with open(self.path+'date.json','w') as data:
