@@ -82,44 +82,44 @@
             orientation:'vertical'
             padding:100
             spacing:30        
-            Button:
-                id:btnA            
-                textColor:'black'
-                canvas:
-                    Color:
-                        rgba:1, 1, 0, 0.8                        
-                    Rectangle:
-                        size:self.size
-                        pos:self.pos
-                text:'Amarelo'
-                on_release:app.root.get_screen('tarefas').upScore()   
-            Button:
-                text:'Vermelho'
-                canvas:
-                    Color:
-                        rgba:1, 0, 0, 0.8
-                    Rectangle:
-                        size:self.size
-                        pos:self.pos
-                on_release:app.root.get_screen('tarefas').upScore()        
-            Button:
-                text:'Azul'
-                canvas:
-                    Color:
-                        rgba:0, 1+0, 1, 0.8
-                    Rectangle:
-                        size:self.size
-                        pos:self.pos
-                on_release:app.root.get_screen('tarefas').upScore()   
-            Button:
-                text:'Verde'
-                canvas:
-                    Color:
-                        rgba:0, 1, 0, 0.8                
-                    Rectangle:
-                        size:self.size
-                        pos:self.pos
-                on_release:app.root.get_screen('tarefas').upScore()   
+            # Button:
+            #     id:btnA            
+            #     textColor:'black'
+            #     canvas:
+            #         Color:
+            #             rgba:1, 1, 0, 0.8                        
+            #         Rectangle:
+            #             size:self.size
+            #             pos:self.pos
+            #     text:'Amarelo'
+            #     on_release:app.root.get_screen('tarefas').upScore()   
+            # Button:
+            #     text:'Vermelho'
+            #     canvas:
+            #         Color:
+            #             rgba:1, 0, 0, 0.8
+            #         Rectangle:
+            #             size:self.size
+            #             pos:self.pos
+            #     on_release:app.root.get_screen('tarefas').upScore()        
+            # Button:
+            #     text:'Azul'
+            #     canvas:
+            #         Color:
+            #             rgba:0, 1+0, 1, 0.8
+            #         Rectangle:
+            #             size:self.size
+            #             pos:self.pos
+            #     on_release:app.root.get_screen('tarefas').upScore()   
+            # Button:
+            #     text:'Verde'
+            #     canvas:
+            #         Color:
+            #             rgba:0, 1, 0, 0.8                
+            #         Rectangle:
+            #             size:self.size
+            #             pos:self.pos
+            #     on_release:app.root.get_screen('tarefas').upScore()   
     BoxLayout:
         id:boxScore
         size_hint_y:None

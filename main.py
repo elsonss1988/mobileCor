@@ -3,14 +3,14 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
-from kivy.properties import ListProperty
-from kivy.properties import StringProperty
+from kivy.properties import ListProperty, StringProperty
 from kivy.uix.label import Label
 from kivy.uix.behaviors.button import ButtonBehavior
 from kivy.graphics import Color, Ellipse, Rectangle
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
 from kivy.core.audio import SoundLoader
+from kivy.utils import get_color_from_hex,hex_colormap
 import json
 import random
 
@@ -19,6 +19,17 @@ red = [1,0,0,1]
 green = [0,1,0,1]
 blue =  [0,0,1,1]
 purple = [1,0,1,1]
+white = [1,1,1,1]
+amarelo = [1,1,0,1]
+colors=[red,green,blue,purple,amarelo,white]
+
+colorDict={'red': [1,0,0,1],
+        'green':[0,1,0,1],
+        'blue':[0,0,1,1],
+        'purple':[1,0,1,1],
+        'amarelo':[1,1,0,1],
+        'white':[1,1,0,1]}
+    
 
 colorList=["amarelo","verde","vermelho","azul"]
 colorQuestion=random.choice(colorList)
@@ -99,9 +110,17 @@ class Tarefas(Screen):
         self.path=App.get_running_app().user_data_dir+'/'
         self.loadData
         self.ids.box.add_widget(Label(text='Qual o botão com a cor '+colorQuestion+' ?',font_size=30,size_hint_y=None,height=200))
+        #colors=[red,green,blue,purple]
+        usedColor=[]
+        for i in range(7):
+            color=random.choice(colors)
+            print(color)          
+            if color not in usedColor :
+                btn=Button(text="Button #%s" % (i+1),background_color=color,on_release=self.upScore)
+                usedColor.append(color)
+                self.ids.btnBox.add_widget(btn)
         Window.bind(on_keyboard=self.voltar)
-        # for tarefa in self.tarefas:
-        #     self.ids.box.add_widget(Tarefa(text=tarefa))
+     
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.voltar)
@@ -117,17 +136,32 @@ class Tarefas(Screen):
         self.ids.score.text= str(int(self.ids.score.text)+1)
         self.popSound.play()
         #colorList=["amarelo","verde","vermelho","azul"]
+        #colorQuestion=random.choice(str(colors[]))
         colorQuestion=random.choice(colorList)
         self.ids.box.clear_widgets()
         self.ids.box.add_widget(Label(text='Qual o botão com a cor '+colorQuestion+' ?',font_size=30,size_hint_y=None,height=200))
         self.ids.btnBox.clear_widgets()
         #layout=BoxLayout(padding=10)
-        colors=[red,green,blue,purple]
-        for i in range(5):
-            btn=Button(text="Button #%s" % (i+1),background_color=random.choice(colors))
-            self.ids.btnBox.add_widget(btn)
-        self.ids.btnA.my_color = (1, 0, 0,1)
-        self.ids.btnA.canvas.ask_update()
+        #colors=[red,green,blue,purple]
+        k=0
+        usedColor=[]
+        for i in range(7):
+            color=random.choice(colors)
+            print(str(Color(tuple(color))))            
+            if color not in usedColor :
+                btn=Button(text="Button #%s" % (i+1),background_color=color,on_release=self.upScore)
+                usedColor.append(color)
+                self.ids.btnBox.add_widget(btn)
+            
+        #self.ids.btnA.my_color = (1, 0, 0,1)
+        #self.ids.btnA.canvas.ask_update()
+        if (get_color_from_hex(hex_colormap['red'])in usedColor):
+            print("ok")
+        else:
+            print(hex_colormap['red'])
+            print(get_color_from_hex(hex_colormap['red']))
+            mycor=random.choice(list(colorDict.values()))
+            print(mycor )
         return Tarefas()
     #   self.popapSound.play() #erro
     #   self.ids.boxScore.Label.text= str(int(self.ids.boxScore.Label.text)+1)
