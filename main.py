@@ -132,11 +132,13 @@ class Tarefas(Screen):
             App.get_running_app().root.current='menu'
             #print(key)
             return True
-    def btncolor(self,index,other):
-        bttn=index
+    def btncolor(self,index,text,other):
+        self.bttn=index
         print(self)
+        print(text)
         print(index)
-        print(other)
+        self.A=str(other.text.split("#"))
+        self.B=str(other.color)
         print("==============")
         return index
 
@@ -152,6 +154,7 @@ class Tarefas(Screen):
         self.ids.btnBox.clear_widgets()
         #layout=BoxLayout(padding=10)
         #colors=[red,green,blue,purple]
+        
         k=0
         usedColor=[]
         for i in range(7):
@@ -159,22 +162,31 @@ class Tarefas(Screen):
             #print(str(Color(tuple(color))))            
             if color not in usedColor :
                 k=k+1
-                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.btncolor(color, *args)) #Button(on_press=partial(self.my_function, 'btn1'))
-                #print('btn'+str(btn)) #btn<kivy.uix.button.Button object at 
+                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.btncolor(color,k, *args)) #Button(on_press=partial(self.my_function, 'btn1'))
+                print('btn'+str(btn)) #btn<kivy.uix.button.Button object at 
                 usedColor.append(color)
                 self.ids.btnBox.add_widget(btn)
                 a=btn.background_color
+               
             
         #self.ids.btnA.my_color = (1, 0, 0,1)
         #self.ids.btnA.canvas.ask_update()
+        btnContext=btn.text.split("#")
         if (get_color_from_hex(hex_colormap['red'])in usedColor):
             print("ok")
         else:
             #print(hex_colormap['red']) #saida ff0000
             #print(get_color_from_hex(hex_colormap['red'])) #saida [1.0, 0.0, 0.0, 1]
             mycor=random.choice(list(colorDict.values()))
+            indexList=int(btnContext[1])-1
+            print(k)
+            print(self.A)
+            print(self.B)
+           # print(self.bttn)
             print(mycor )
             print('mybn'+str(a))
+            print('myContext '+ btnContext[1] )
+            print(usedColor[indexList])
             print(' '.join(str(usedColor)))   
         return Tarefas()
     #   self.popapSound.play() #erro
