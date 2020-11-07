@@ -14,9 +14,17 @@ from kivy.utils import get_color_from_hex,hex_colormap
 from functools import partial
 from time import sleep
 from kivy.clock import Clock
+import mysql.connector
 import json
 import random
 
+mydb = mysql.connector.connect(
+#  https://www.freemysqlhosting.net/account/
+  host="sql3.freemysqlhosting.net",
+  user="sql3369269",
+  password="MbEjQUfcpb",
+  database="sql3369269"
+)
 
 red = [1,0,0,1]
 green = [0,1,0,1]
@@ -109,18 +117,19 @@ class Tarefas(Screen):
         if self.popSound == None:
             self.popSound=SoundLoader.load('pop.mp3')
             self.popapSound=SoundLoader.load('popap.mp3')
-        self.ids.box.clear_widgets()
-        self.path=App.get_running_app().user_data_dir+'/'
-        self.loadData
-        self.ids.box.add_widget(Label(text='Comece com qualquer botão ?',font_size=30,size_hint_y=None,height=200))
-        usedColor=[]
-        for i in range(7):
-            color=random.choice(colors)
-            #print(color)          
-            if color not in usedColor :
-                btn=Button(text="Button #%s" % (i+1),background_color=color,on_release=self.upScore)
-                usedColor.append(color)
-                self.ids.btnBox.add_widget(btn)
+        self.upScore()
+        # self.ids.box.clear_widgets()
+        # self.path=App.get_running_app().user_data_dir+'/'
+        # self.loadData
+        # self.ids.box.add_widget(Label(text='Comece com qualquer botão ?',font_size=30,size_hint_y=None,height=200))
+        # usedColor=[]
+        # for i in range(7):
+        #     color=random.choice(colors)
+        #     #print(color)          
+        #     if color not in usedColor :
+        #         btn=Button(text="Button #%s" % (i+1),background_color=color,on_release=self.upScore)
+        #         usedColor.append(color)
+        #         self.ids.btnBox.add_widget(btn)
         Window.bind(on_keyboard=self.voltar)
      
 
@@ -144,8 +153,17 @@ class Tarefas(Screen):
             print("ok")
             print(str(self.colorQuestionCode))
             print(self.btnColor)
-            
-            print("==============")   
+            self.ids.score.text= str(int(self.ids.score.text)+1)
+            myScore=self.ids.score.text 
+            print("==============")
+            mycursor = mydb.cursor()
+            sql="""UPDATE aluno SET score = %s WHERE id like %s;"""
+            inputData=(str(myScore),1)
+            mycursor.execute(sql,inputData)
+            mydb.commit()
+            # myresult = mycursor.fetchall()
+            # for x in myresult:
+            #     print(x)   
         else:
             print("Errou")
             print(str(self.colorQuestionCode))
@@ -159,7 +177,7 @@ class Tarefas(Screen):
 
     def upScore(self,*args):        
         # score=self.ids.score.text        
-        self.ids.score.text= str(int(self.ids.score.text)+1)
+        
         print(self.ids.score.text)
         self.popSound.play()        
         self.ids.box.clear_widgets()       
@@ -182,10 +200,11 @@ class Tarefas(Screen):
         self.colorQuestion=str(list(colorDict.keys())[list(colorDict.values()).index(self.colorQuestionCode)])
         self.ids.box.add_widget(Label(text='Qual o botão com a cor '+self.colorQuestion+' ?',font_size=30,size_hint_y=None,height=200)) 
         print(' '.join(str(usedColor)))
-        print("****************")  
-               
-   
+        print("****************")   
         return Tarefas()
+    
+    def getScore(self):
+        return self.ids.score.text
    
     def saveData(self,*args):
         with open(self.path+'date.json','w') as data:
@@ -223,3 +242,19 @@ class Test(App):
         return Gerenciador() 
 
 Test().run()
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SHOW TABLES")
+
+for x in mycursor:
+  print(x)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM aluno")
+
+myresult = mycursor.fetchall()
+
+for x in myresult:
+  print(x)
