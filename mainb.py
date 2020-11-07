@@ -12,6 +12,8 @@ from kivy.uix.image import Image
 from kivy.core.audio import SoundLoader
 from kivy.utils import get_color_from_hex,hex_colormap
 from functools import partial
+from time import sleep
+from kivy.clock import Clock
 import json
 import random
 
@@ -28,7 +30,7 @@ colorDict={'red': [1,0,0,1],
         'blue':[0,0,1,1],
         'purple':[1,0,1,1],
         'amarelo':[1,1,0,1],
-        'white':[1,1,0,1]}
+        'white':[1,1,1,1]}
     
 
 colorList=["amarelo","verde","vermelho","azul"]
@@ -110,12 +112,11 @@ class Tarefas(Screen):
         self.ids.box.clear_widgets()
         self.path=App.get_running_app().user_data_dir+'/'
         self.loadData
-        self.ids.box.add_widget(Label(text='Qual o botão com a cor '+colorQuestion+' ?',font_size=30,size_hint_y=None,height=200))
-        #colors=[red,green,blue,purple]
+        self.ids.box.add_widget(Label(text='Comece com qualquer botão ?',font_size=30,size_hint_y=None,height=200))
         usedColor=[]
         for i in range(7):
             color=random.choice(colors)
-            print(color)          
+            #print(color)          
             if color not in usedColor :
                 btn=Button(text="Button #%s" % (i+1),background_color=color,on_release=self.upScore)
                 usedColor.append(color)
@@ -131,46 +132,54 @@ class Tarefas(Screen):
             App.get_running_app().root.current='menu'
             #print(key)
             return True
-    def btncolor(self,color,instance):
-        print(color)
-        print(str(instance.color))
-        indexSplit=str(instance.text.split("#"))
+  
+
+    def upScore(self,instance):
+        sleep(1)
+        # score=self.ids.score.text
+        indexSplit=instance.text.split("#")
         print(indexSplit)
         self.index=indexSplit[1]
         self.btnColor=str(instance.background_color)
-        
-        print(self.index)
-        print(self.btnColor)
-        print("==============")
-
-    def upScore(self,*args):
-        # score=self.ids.score.text
         self.ids.score.text= str(int(self.ids.score.text)+1)
+        print(self.ids.score.text)
         self.popSound.play()
-        colorQuestion=random.choice(colorList)
-        self.ids.box.clear_widgets()
-        self.ids.box.add_widget(Label(text='Qual o botão com a cor '+colorQuestion+' ?',font_size=30,size_hint_y=None,height=200))
-        self.ids.btnBox.clear_widgets()
-       
+        
+        self.ids.box.clear_widgets()       
+        self.ids.btnBox.clear_widgets()       
         k=0
         usedColor=[]
         for i in range(7):
+            #Clock.schedule_once(self.function,5)
             color=random.choice(colors)
             #print(str(Color(tuple(color))))            
             if color not in usedColor :
                 k=k+1
-                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.btncolor(color,*args))
+                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.upScore(*args))
                 #print('btn'+str(btn)) #btn<kivy.uix.button.Button object at 
                 usedColor.append(color)
-                self.ids.btnBox.add_widget(btn)                
-        if (get_color_from_hex(hex_colormap['red'])in usedColor):
+                self.ids.btnBox.add_widget(btn)
+                # mycor=random.choice(list(colorDict.values()))
+        colorQuestionCode=random.choice(usedColor)
+        #print(str(colorQuestionCode))
+        colorQuestion=str(list(colorDict.keys())[list(colorDict.values()).index(colorQuestionCode)])
+        self.ids.box.add_widget(Label(text='Qual o botão com a cor '+colorQuestion+' ?',font_size=30,size_hint_y=None,height=200))                
+        if (str(colorQuestionCode)==self.btnColor):
             print("ok")
-        else:
-            print(self.index)
+            print(str(colorQuestionCode))
             print(self.btnColor)
-            #indexList=int(self.index[1])-1
-            #print(usedColor[indexList])
-            print(' '.join(str(usedColor)))   
+            print(' '.join(str(usedColor)))
+            print("==============")   
+        else:
+            print("Errou")
+            print(str(colorQuestionCode))
+            print(self.btnColor)
+            # print(self.index)
+            # print(self.btnColor)
+            # indexList=int(self.index)-1
+            # print(usedColor[indexList])
+            print(' '.join(str(usedColor)))
+            print("==============")   
         return Tarefas()
    
     def saveData(self,*args):
