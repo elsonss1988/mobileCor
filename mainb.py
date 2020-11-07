@@ -133,18 +133,35 @@ class Tarefas(Screen):
             #print(key)
             return True
   
-
-    def upScore(self,instance):
-        sleep(1)
-        # score=self.ids.score.text
+    def getProp(self,instance):
         indexSplit=instance.text.split("#")
         print(indexSplit)
         self.index=indexSplit[1]
         self.btnColor=str(instance.background_color)
+        print(self.btnColor)
+        
+        if (str(self.colorQuestionCode)==self.btnColor):
+            print("ok")
+            print(str(self.colorQuestionCode))
+            print(self.btnColor)
+            
+            print("==============")   
+        else:
+            print("Errou")
+            print(str(self.colorQuestionCode))
+            print(self.btnColor)
+            # print(self.index)
+            # print(self.btnColor)
+            # indexList=int(self.index)-1
+            # print(usedColor[indexList])
+            
+            print("==============")  
+
+    def upScore(self,*args):        
+        # score=self.ids.score.text        
         self.ids.score.text= str(int(self.ids.score.text)+1)
         print(self.ids.score.text)
-        self.popSound.play()
-        
+        self.popSound.play()        
         self.ids.box.clear_widgets()       
         self.ids.btnBox.clear_widgets()       
         k=0
@@ -155,31 +172,19 @@ class Tarefas(Screen):
             #print(str(Color(tuple(color))))            
             if color not in usedColor :
                 k=k+1
-                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.upScore(*args))
+                btn=Button(text="Button #%s" % (k),background_color=color,on_release=self.upScore,on_press=lambda *args: self.getProp(*args))
                 #print('btn'+str(btn)) #btn<kivy.uix.button.Button object at 
                 usedColor.append(color)
                 self.ids.btnBox.add_widget(btn)
                 # mycor=random.choice(list(colorDict.values()))
-        colorQuestionCode=random.choice(usedColor)
-        #print(str(colorQuestionCode))
-        colorQuestion=str(list(colorDict.keys())[list(colorDict.values()).index(colorQuestionCode)])
-        self.ids.box.add_widget(Label(text='Qual o botão com a cor '+colorQuestion+' ?',font_size=30,size_hint_y=None,height=200))                
-        if (str(colorQuestionCode)==self.btnColor):
-            print("ok")
-            print(str(colorQuestionCode))
-            print(self.btnColor)
-            print(' '.join(str(usedColor)))
-            print("==============")   
-        else:
-            print("Errou")
-            print(str(colorQuestionCode))
-            print(self.btnColor)
-            # print(self.index)
-            # print(self.btnColor)
-            # indexList=int(self.index)-1
-            # print(usedColor[indexList])
-            print(' '.join(str(usedColor)))
-            print("==============")   
+        
+        self.colorQuestionCode=random.choice(usedColor)        
+        self.colorQuestion=str(list(colorDict.keys())[list(colorDict.values()).index(self.colorQuestionCode)])
+        self.ids.box.add_widget(Label(text='Qual o botão com a cor '+self.colorQuestion+' ?',font_size=30,size_hint_y=None,height=200)) 
+        print(' '.join(str(usedColor)))
+        print("****************")  
+               
+   
         return Tarefas()
    
     def saveData(self,*args):
